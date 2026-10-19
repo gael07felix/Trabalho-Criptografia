@@ -132,6 +132,11 @@ app.post('/api/assinatura/verificar', (req, res) => {
   }
 });
 
-app.listen(PORTA, () => {
-  console.log(`Servidor rodando em http://localhost:${PORTA}`);
-});
+// Localmente o servidor é iniciado aqui; na Vercel, a plataforma importa o app exportado
+if (require.main === module) {
+  app.listen(PORTA, () => {
+    console.log(`Servidor rodando em http://localhost:${PORTA}`);
+  });
+}
+
+module.exports = app;

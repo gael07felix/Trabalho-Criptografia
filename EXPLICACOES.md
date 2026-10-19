@@ -293,7 +293,7 @@ O hash é levado de uma tela para a outra de três formas: copiando e colando, c
 
 ### Envio de arquivos
 
-O navegador lê os bytes do texto (convertido com `TextEncoder`, em UTF-8) ou do arquivo e os envia ao servidor em **Base64** dentro do JSON. O Base64 ocupa cerca de 33% a mais que o original, por isso o limite do servidor foi aumentado para 30 MB e o limite de arquivo na tela é de 20 MB.
+O navegador lê os bytes do texto (convertido com `TextEncoder`, em UTF-8) ou do arquivo e os envia ao servidor em **Base64** dentro do JSON. O Base64 ocupa cerca de 33% a mais que o original. Como a Vercel limita cada requisição a 4,5 MB, o limite de arquivo na tela é de 3 MB (que vira cerca de 4 MB em Base64).
 
 ### Código - `src/hash.js`
 

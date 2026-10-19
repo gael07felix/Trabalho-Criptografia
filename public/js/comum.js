@@ -28,7 +28,8 @@ function limparAviso(id) {
   aviso.textContent = '';
 }
 
-const TAMANHO_MAXIMO_ARQUIVO = 20 * 1024 * 1024; // 20 MB
+// A Vercel limita o corpo da requisição a 4,5 MB, e o Base64 aumenta o arquivo em cerca de 33%
+const TAMANHO_MAXIMO_ARQUIVO = 3 * 1024 * 1024; // 3 MB
 
 function bytesParaBase64(bytes) {
   let binario = '';

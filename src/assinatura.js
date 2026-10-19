@@ -40,8 +40,11 @@ function gerarNumeroDeSerie() {
 
 /*
  * Autoridade Certificadora (AC) simulada.
- * É criada uma única vez e salva em disco, para que os certificados emitidos
- * continuem verificáveis mesmo depois de reiniciar o servidor.
+ * Ordem de carregamento:
+ *   1. Variáveis de ambiente AC_CERTIFICADO e AC_CHAVE_PRIVADA (usado na Vercel,
+ *      onde cada instância do servidor precisa usar a mesma AC)
+ *   2. Arquivos em dados/ac (uso local)
+ *   3. Cria uma AC nova e tenta salvá-la em dados/ac
  */
 function criarAC() {
   const { chavePublica, chavePrivada } = gerarParDeChaves();
@@ -64,17 +67,42 @@ function criarAC() {
   ]);
   certificado.sign(chavePrivadaForge, forge.md.sha256.create());
 
-  fs.mkdirSync(PASTA_AC, { recursive: true });
-  fs.writeFileSync(ARQUIVO_CHAVE_AC, chavePrivada);
-  fs.writeFileSync(ARQUIVO_CERTIFICADO_AC, forge.pki.certificateToPem(certificado));
+  const certificadoPem = forge.pki.certificateToPem(certificado);
+  try {
+    fs.mkdirSync(PASTA_AC, { recursive: true });
+    fs.writeFileSync(ARQUIVO_CHAVE_AC, chavePrivada);
+    fs.writeFileSync(ARQUIVO_CERTIFICADO_AC, certificadoPem);
+  } catch {
+    console.warn('Não foi possível salvar a AC em disco. Ela existirá apenas enquanto o servidor estiver rodando.');
+  }
+  return { certificadoPem, chavePrivadaPem: chavePrivada };
+}
+
+// Painéis de variáveis de ambiente às vezes salvam as quebras de linha como "\n" literal
+function lerPemDoAmbiente(nome) {
+  const valor = process.env[nome];
+  return valor ? valor.replace(/\\n/g, '\n').trim() + '\n' : null;
+}
+
+function obterPemsDaAC() {
+  const certificadoAmbiente = lerPemDoAmbiente('AC_CERTIFICADO');
+  const chaveAmbiente = lerPemDoAmbiente('AC_CHAVE_PRIVADA');
+  if (certificadoAmbiente && chaveAmbiente) {
+    return { certificadoPem: certificadoAmbiente, chavePrivadaPem: chaveAmbiente };
+  }
+
+  if (fs.existsSync(ARQUIVO_CHAVE_AC) && fs.existsSync(ARQUIVO_CERTIFICADO_AC)) {
+    return {
+      certificadoPem: fs.readFileSync(ARQUIVO_CERTIFICADO_AC, 'utf8'),
+      chavePrivadaPem: fs.readFileSync(ARQUIVO_CHAVE_AC, 'utf8'),
+    };
+  }
+
+  return criarAC();
 }
 
 function carregarAC() {
-  if (!fs.existsSync(ARQUIVO_CHAVE_AC) || !fs.existsSync(ARQUIVO_CERTIFICADO_AC)) {
-    criarAC();
-  }
-  const certificadoPem = fs.readFileSync(ARQUIVO_CERTIFICADO_AC, 'utf8');
-  const chavePrivadaPem = fs.readFileSync(ARQUIVO_CHAVE_AC, 'utf8');
+  const { certificadoPem, chavePrivadaPem } = obterPemsDaAC();
   return {
     certificadoPem,
     certificado: new crypto.X509Certificate(certificadoPem),
