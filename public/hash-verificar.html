@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verificar Hash - SHA-256</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main>
+    <a class="voltar-menu" href="index.html">&larr; Voltar ao menu</a>
+
+    <div class="wizard" id="wizard">
+      <div class="wizard-topo">
+        <span class="wizard-rotulo">Passo a passo &middot; Tela 2 de 2</span>
+        <h1>Verificar Hash (SHA-256)</h1>
+        <p class="wizard-contador"></p>
+      </div>
+
+      <!-- Passo 1 -->
+      <div class="passo" data-titulo="Informe o hash esperado" data-requer-acao>
+        <div class="cena">
+          <div class="objeto">
+            <svg viewBox="0 0 24 24"><path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/></svg>
+            <span>hash original</span>
+          </div>
+        </div>
+        <p class="passo-texto">
+          Este é o hash que o remetente divulgou junto com a mensagem ou o arquivo (o que foi gerado na tela 1).
+          Cole o hash, carregue o arquivo <strong>.sha256</strong> ou use o último hash gerado.
+        </p>
+        <label for="hash-esperado">Hash SHA-256 esperado</label>
+        <input type="text" id="hash-esperado" placeholder="64 caracteres hexadecimais">
+        <label for="arquivo-sha256">Ou carregue um arquivo .sha256</label>
+        <input type="file" id="arquivo-sha256" accept=".sha256,.txt">
+        <button id="btn-ultimo-hash" class="btn-secundario">Usar o último hash gerado</button>
+        <p id="aviso-hash" class="aviso"></p>
+      </div>
+
+      <!-- Passo 2 -->
+      <div class="passo" data-titulo="Informe a mensagem ou arquivo recebido" data-requer-acao>
+        <div class="cena">
+          <div class="objeto">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>
+            <span>dados recebidos</span>
+          </div>
+        </div>
+        <p class="passo-texto">
+          Agora informe a mensagem ou o arquivo que você recebeu. O hash será calculado de novo e comparado com o esperado.
+          Para simular uma alteração, mude uma letra da mensagem ou use outro arquivo.
+        </p>
+        <div class="abas">
+          <button id="recebido-aba-texto" class="aba">Mensagem</button>
+          <button id="recebido-aba-arquivo" class="aba">Arquivo</button>
+        </div>
+        <div id="recebido-area-texto">
+          <label for="recebido-texto">Mensagem recebida</label>
+          <textarea id="recebido-texto" placeholder="Digite exatamente a mensagem recebida"></textarea>
+        </div>
+        <div id="recebido-area-arquivo">
+          <label for="recebido-arquivo">Arquivo recebido (até 20 MB)</label>
+          <input type="file" id="recebido-arquivo">
+        </div>
+      </div>
+
+      <!-- Passo 3 -->
+      <div class="passo" data-titulo="Compare os hashes" data-requer-acao>
+        <p class="passo-texto">
+          O hash dos dados recebidos é calculado e comparado, caractere por caractere, com o hash esperado.
+        </p>
+        <button id="btn-verificar">Verificar</button>
+        <p id="aviso-verificar" class="aviso"></p>
+        <div id="area-resultado" hidden>
+          <div id="resultado" class="resultado-grande"></div>
+          <label>Hash esperado</label>
+          <div id="resultado-esperado" class="hash-saida"></div>
+          <label>Hash calculado dos dados recebidos</label>
+          <div id="resultado-calculado" class="hash-saida"></div>
+        </div>
+      </div>
+
+      <!-- Passo 4 -->
+      <div class="passo" data-titulo="O que isso significa">
+        <p id="aviso-conclusao" class="aviso"></p>
+        <ul class="dica">
+          <li>O hash garante a <strong>integridade</strong>: se os dados mudarem, mesmo que 1 bit, o hash muda.</li>
+          <li>O hash <strong>não é criptografia</strong>: não existe "decifrar" um hash. É uma função de mão única.</li>
+          <li>O hash sozinho <strong>não garante quem enviou</strong>: um atacante poderia trocar o arquivo e o hash juntos. Para provar a autoria, usamos a <strong>assinatura digital</strong>, que é o próximo assunto.</li>
+          <li>Usos comuns: conferir downloads, armazenar senhas (com sal), blockchain e assinatura digital.</li>
+        </ul>
+      </div>
+
+      <div class="wizard-rodape">
+        <div class="wizard-pontos"></div>
+        <div class="wizard-botoes">
+          <button class="wizard-voltar btn-secundario">&lsaquo; Voltar</button>
+          <button class="wizard-proximo">Próximo &rsaquo;</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/comum.js"></script>
+  <script src="js/hash-verificar.js"></script>
+</body>
+</html>

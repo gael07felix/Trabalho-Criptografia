@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criptografia Simétrica - AES</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main>
+    <a class="voltar-menu" href="index.html">&larr; Voltar ao menu</a>
+
+    <div class="wizard" id="wizard">
+      <div class="wizard-topo">
+        <span class="wizard-rotulo">Passo a passo</span>
+        <h1>Criptografia Simétrica (AES-256)</h1>
+        <p class="wizard-contador"></p>
+      </div>
+
+      <!-- Passo 1 -->
+      <div class="passo" data-titulo="Alice e Bob combinam uma chave secreta">
+        <div class="cena">
+          <div class="ator">A<span>Alice</span></div>
+          <div class="objeto">
+            <svg viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3 21 2M16 7l3 3M18.5 4.5l2 2"/></svg>
+            <span>mesma chave</span>
+          </div>
+          <div class="ator">B<span>Bob</span></div>
+        </div>
+        <p class="passo-texto">
+          Na criptografia simétrica, existe <strong>uma única chave</strong>. Alice e Bob precisam combinar
+          essa chave antes de trocar mensagens. Ela foi gerada automaticamente: são 256 bits aleatórios.
+        </p>
+        <label for="chave">Chave secreta (hexadecimal)</label>
+        <input type="text" id="chave" readonly>
+        <button id="btn-gerar-chave" class="btn-secundario">Gerar nova chave</button>
+        <p id="aviso-chave" class="aviso"></p>
+      </div>
+
+      <!-- Passo 2 -->
+      <div class="passo" data-titulo="Alice escreve e cifra a mensagem" data-requer-acao>
+        <div class="cena">
+          <div class="ator">A<span>Alice</span></div>
+          <div class="objeto">
+            <svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+            <span>cifrar</span>
+          </div>
+        </div>
+        <p class="passo-texto">
+          Alice escreve a mensagem e usa a chave para <strong>cifrá-la</strong>. O resultado é um texto
+          ilegível para quem não tem a chave.
+        </p>
+        <label for="mensagem">Mensagem secreta da Alice</label>
+        <textarea id="mensagem" placeholder="Ex.: A reunião será amanhã às 10h"></textarea>
+        <button id="btn-cifrar">Cifrar mensagem</button>
+        <p id="aviso-cifrar" class="aviso"></p>
+      </div>
+
+      <!-- Passo 3 -->
+      <div class="passo" data-titulo="A mensagem cifrada viaja pela rede">
+        <div class="cena">
+          <div class="ator">A<span>Alice</span></div>
+          <div class="objeto">
+            <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+            <span>&rarr; enviando &rarr;</span>
+          </div>
+          <div class="ator">B<span>Bob</span></div>
+        </div>
+        <p id="aviso-envio" class="aviso"></p>
+        <p class="passo-texto">
+          Isto é o que um espião veria se interceptasse a mensagem. Sem a chave, ele não consegue ler nada.
+        </p>
+        <label for="pacote">Mensagem cifrada (Base64)</label>
+        <textarea id="pacote"></textarea>
+        <p class="dica">
+          Quer simular um ataque? Altere um caractere acima antes de avançar. No próximo passo, Bob vai perceber.
+        </p>
+        <details>
+          <summary>Ver detalhes técnicos</summary>
+          <p class="dica">A mensagem enviada é a junção destas três partes:</p>
+          <label>IV - vetor de inicialização (aleatório a cada envio)</label>
+          <input type="text" id="iv" readonly>
+          <label>Tag de autenticação (detecta alterações)</label>
+          <input type="text" id="tag" readonly>
+          <label>Texto cifrado</label>
+          <input type="text" id="texto-cifrado" readonly>
+        </details>
+      </div>
+
+      <!-- Passo 4 -->
+      <div class="passo" data-titulo="Bob decifra com a mesma chave" data-requer-acao>
+        <div class="cena">
+          <div class="objeto">
+            <svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.8-1.2"/></svg>
+            <span>decifrar</span>
+          </div>
+          <div class="ator">B<span>Bob</span></div>
+        </div>
+        <p class="passo-texto">
+          Bob recebeu a mensagem cifrada e usa a <strong>mesma chave</strong> combinada no passo 1 para decifrá-la.
+        </p>
+        <label for="chave-bob">Chave do Bob</label>
+        <input type="text" id="chave-bob">
+        <p class="dica">Para simular uma chave errada, altere um caractere da chave do Bob.</p>
+        <button id="btn-decifrar">Decifrar mensagem</button>
+        <p id="aviso-decifrar" class="aviso"></p>
+        <label for="mensagem-decifrada">Mensagem que Bob leu</label>
+        <textarea id="mensagem-decifrada" readonly></textarea>
+      </div>
+
+      <!-- Passo 5 -->
+      <div class="passo" data-titulo="Resumo">
+        <div class="resumo">
+          <div>
+            <label>Alice enviou</label>
+            <textarea id="resumo-original" readonly></textarea>
+          </div>
+          <div>
+            <label>Bob leu</label>
+            <textarea id="resumo-decifrada" readonly></textarea>
+          </div>
+        </div>
+        <p id="aviso-resumo" class="aviso"></p>
+        <ul class="dica">
+          <li>A <strong>mesma chave</strong> foi usada para cifrar e decifrar: por isso é criptografia simétrica.</li>
+          <li>O problema: como Alice e Bob combinam a chave sem que ninguém a intercepte? A criptografia assimétrica resolve isso.</li>
+          <li>Cifre a mesma mensagem duas vezes: o resultado muda, por causa do IV aleatório.</li>
+          <li>Se a chave estiver errada ou a mensagem for alterada no caminho, a decifragem falha.</li>
+        </ul>
+      </div>
+
+      <div class="wizard-rodape">
+        <div class="wizard-pontos"></div>
+        <div class="wizard-botoes">
+          <button class="wizard-voltar btn-secundario">&lsaquo; Voltar</button>
+          <button class="wizard-proximo">Próximo &rsaquo;</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/comum.js"></script>
+  <script src="js/simetrica.js"></script>
+</body>
+</html>

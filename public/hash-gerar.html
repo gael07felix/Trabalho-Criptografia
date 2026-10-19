@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerar Hash - SHA-256</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main>
+    <a class="voltar-menu" href="index.html">&larr; Voltar ao menu</a>
+
+    <div class="wizard" id="wizard">
+      <div class="wizard-topo">
+        <span class="wizard-rotulo">Passo a passo &middot; Tela 1 de 2</span>
+        <h1>Gerar Hash (SHA-256)</h1>
+        <p class="wizard-contador"></p>
+      </div>
+
+      <!-- Passo 1 -->
+      <div class="passo" data-titulo="Escolha uma mensagem ou arquivo" data-requer-acao>
+        <div class="cena">
+          <div class="objeto">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>
+            <span>dados</span>
+          </div>
+          <div class="objeto">
+            <span>&rarr; SHA-256 &rarr;</span>
+          </div>
+          <div class="objeto">
+            <svg viewBox="0 0 24 24"><path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/></svg>
+            <span>hash</span>
+          </div>
+        </div>
+        <p class="passo-texto">
+          Um <strong>hash</strong> é uma "impressão digital" dos dados: uma sequência de tamanho fixo calculada a partir
+          do conteúdo. Qualquer mudança nos dados, por menor que seja, gera um hash completamente diferente.
+          Escolha o que você quer proteger.
+        </p>
+        <div class="abas">
+          <button id="entrada-aba-texto" class="aba">Mensagem</button>
+          <button id="entrada-aba-arquivo" class="aba">Arquivo</button>
+        </div>
+        <div id="entrada-area-texto">
+          <label for="entrada-texto">Mensagem</label>
+          <textarea id="entrada-texto" placeholder="Ex.: Transferir R$ 100,00 para a conta 12345"></textarea>
+        </div>
+        <div id="entrada-area-arquivo">
+          <label for="entrada-arquivo">Arquivo (até 20 MB)</label>
+          <input type="file" id="entrada-arquivo">
+        </div>
+      </div>
+
+      <!-- Passo 2 -->
+      <div class="passo" data-titulo="Calcule o hash" data-requer-acao>
+        <p class="passo-texto">
+          O algoritmo <strong>SHA-256</strong> lê todos os bytes e produz um resumo de <strong>256 bits</strong>
+          (64 caracteres em hexadecimal), não importa se a entrada tem 1 letra ou 1 GB.
+        </p>
+        <p class="dica" id="info-entrada"></p>
+        <button id="btn-calcular">Calcular hash</button>
+        <p id="aviso-calcular" class="aviso"></p>
+        <label>Hash SHA-256</label>
+        <div id="hash-sha256" class="hash-saida">-</div>
+        <details>
+          <summary>Comparar com outros algoritmos</summary>
+          <label>MD5 (128 bits) - inseguro, colisões conhecidas desde 2004</label>
+          <div id="hash-md5" class="hash-saida">-</div>
+          <label>SHA-1 (160 bits) - inseguro, colisão demonstrada em 2017</label>
+          <div id="hash-sha1" class="hash-saida">-</div>
+          <label>SHA-512 (512 bits) - seguro</label>
+          <div id="hash-sha512" class="hash-saida">-</div>
+        </details>
+      </div>
+
+      <!-- Passo 3 -->
+      <div class="passo" data-titulo="Efeito avalanche: mude um único bit">
+        <p class="passo-texto">
+          Vamos alterar <strong>apenas 1 bit</strong> do último byte dos dados e calcular o hash de novo.
+          Repare quanto o resultado muda.
+        </p>
+        <button id="btn-avalanche">Alterar 1 bit e recalcular</button>
+        <p id="aviso-avalanche" class="aviso"></p>
+        <div id="area-avalanche" hidden>
+          <div id="area-texto-alterado">
+            <label>Mensagem alterada</label>
+            <div id="texto-alterado" class="hash-saida"></div>
+          </div>
+          <label>Hash original</label>
+          <div id="avalanche-original" class="hash-saida"></div>
+          <label>Hash após alterar 1 bit (diferenças destacadas)</label>
+          <div id="avalanche-alterado" class="hash-saida"></div>
+        </div>
+      </div>
+
+      <!-- Passo 4 -->
+      <div class="passo" data-titulo="Guarde o hash para conferir depois">
+        <div class="cena">
+          <div class="objeto">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            <span>salvar</span>
+          </div>
+          <div class="objeto">
+            <span>&rarr;</span>
+          </div>
+          <div class="objeto">
+            <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+            <span>verificar</span>
+          </div>
+        </div>
+        <p class="passo-texto">
+          Quem receber a mensagem ou o arquivo pode calcular o hash de novo e comparar com este.
+          Se forem iguais, os dados <strong>não foram alterados</strong>. Salve o hash e abra a tela de verificação.
+        </p>
+        <label>Hash SHA-256 de <span id="nome-final"></span></label>
+        <div id="hash-final" class="hash-saida"></div>
+        <button id="btn-copiar" class="btn-secundario">Copiar hash</button>
+        <button id="btn-baixar" class="btn-secundario">Baixar arquivo .sha256</button>
+        <p id="aviso-salvar" class="aviso"></p>
+        <a class="botao-link" href="hash-verificar.html" target="_blank">Abrir a tela de verificação &rarr;</a>
+      </div>
+
+      <div class="wizard-rodape">
+        <div class="wizard-pontos"></div>
+        <div class="wizard-botoes">
+          <button class="wizard-voltar btn-secundario">&lsaquo; Voltar</button>
+          <button class="wizard-proximo">Próximo &rsaquo;</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/comum.js"></script>
+  <script src="js/hash-gerar.js"></script>
+</body>
+</html>

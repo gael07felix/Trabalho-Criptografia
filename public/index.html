@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criptografia - Segurança da Informação</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1>Criptografia, Hash e Assinatura Digital</h1>
+    <p>Trabalho de Segurança da Informação - IFSP</p>
+  </header>
+
+  <main>
+    <div class="menu">
+      <a class="card" href="simetrica.html">
+        <h2>Criptografia Simétrica</h2>
+        <p>AES-256: a mesma chave cifra e decifra a mensagem.</p>
+      </a>
+
+      <a class="card" href="assimetrica.html">
+        <h2>Criptografia Assimétrica</h2>
+        <p>RSA: cifra com a chave pública e decifra com a chave privada.</p>
+      </a>
+
+      <a class="card" href="hash-gerar.html">
+        <h2>Gerar Hash</h2>
+        <p>SHA-256: calcula o hash de uma mensagem ou arquivo.</p>
+      </a>
+
+      <a class="card" href="hash-verificar.html">
+        <h2>Verificar Hash</h2>
+        <p>Confere se uma mensagem ou arquivo corresponde a um hash.</p>
+      </a>
+
+      <a class="card" href="assinatura.html">
+        <h2>Assinatura Digital</h2>
+        <p>Gera chaves e certificado, assina um arquivo e verifica a assinatura.</p>
+      </a>
+    </div>
+
+    <p id="status-servidor" class="status">Verificando servidor...</p>
+  </main>
+
+  <script>
+    fetch('/api/status')
+      .then((resposta) => resposta.json())
+      .then((dados) => {
+        const elemento = document.getElementById('status-servidor');
+        elemento.textContent = dados.mensagem;
+        elemento.classList.add('sucesso');
+      })
+      .catch(() => {
+        const elemento = document.getElementById('status-servidor');
+        elemento.textContent = 'Servidor indisponível';
+        elemento.classList.add('erro');
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "trabalho-criptografia",
+  "version": "1.0.0",
+  "description": "Aplicação web que demonstra criptografia simétrica, assimétrica, hash e assinatura digital",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.3.0",
+    "node-forge": "^1.4.0"
+  }
+}

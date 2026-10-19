@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criptografia Assimétrica - RSA</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main>
+    <a class="voltar-menu" href="index.html">&larr; Voltar ao menu</a>
+
+    <div class="wizard" id="wizard">
+      <div class="wizard-topo">
+        <span class="wizard-rotulo">Passo a passo</span>
+        <h1>Criptografia Assimétrica (RSA-2048)</h1>
+        <p class="wizard-contador"></p>
+      </div>
+
+      <!-- Passo 1 -->
+      <div class="passo" data-titulo="Bob gera um par de chaves" data-requer-acao>
+        <div class="cena">
+          <div class="ator">B<span>Bob</span></div>
+          <div class="objeto">
+            <svg viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3 21 2M16 7l3 3M18.5 4.5l2 2"/></svg>
+            <span>2 chaves</span>
+          </div>
+        </div>
+        <p class="passo-texto">
+          Na criptografia assimétrica, cada pessoa tem <strong>duas chaves</strong> ligadas matematicamente:
+          a <strong>chave pública</strong>, que pode ser divulgada para todos, e a <strong>chave privada</strong>,
+          que fica guardada só com o dono. O que uma cifra, só a outra decifra.
+        </p>
+        <button id="btn-gerar-chaves">Gerar par de chaves do Bob</button>
+        <p id="aviso-chaves" class="aviso"></p>
+        <div class="resumo">
+          <div>
+            <label for="chave-publica">Chave pública (pode divulgar)</label>
+            <textarea id="chave-publica" class="chave-pem" readonly></textarea>
+          </div>
+          <div>
+            <label for="chave-privada">Chave privada (secreta, só o Bob)</label>
+            <textarea id="chave-privada" class="chave-pem" readonly></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Passo 2 -->
+      <div class="passo" data-titulo="Alice cifra com a chave pública do Bob" data-requer-acao>
+        <div class="cena">
+          <div class="ator">A<span>Alice</span></div>
+          <div class="objeto">
+            <svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+            <span>cifrar com a pública</span>
+          </div>
+          <div class="ator">B<span>Bob</span></div>
+        </div>
+        <p class="passo-texto">
+          Bob divulgou a chave pública dele. Alice não precisa combinar nenhum segredo antes: ela usa a
+          <strong>chave pública do Bob</strong> para cifrar a mensagem.
+        </p>
+        <label for="chave-publica-alice">Chave pública do Bob (que a Alice recebeu)</label>
+        <textarea id="chave-publica-alice" class="chave-pem" readonly></textarea>
+        <label for="mensagem">Mensagem secreta da Alice</label>
+        <textarea id="mensagem" placeholder="Ex.: A senha do cofre é 4321"></textarea>
+        <p class="dica" id="contador-bytes">0 de 190 bytes</p>
+        <button id="btn-cifrar">Cifrar mensagem</button>
+        <p id="aviso-cifrar" class="aviso"></p>
+      </div>
+
+      <!-- Passo 3 -->
+      <div class="passo" data-titulo="Um espião intercepta a mensagem">
+        <div class="cena">
+          <div class="ator">A<span>Alice</span></div>
+          <div class="objeto">
+            <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+            <span>&rarr; enviando &rarr;</span>
+          </div>
+          <div class="ator">B<span>Bob</span></div>
+          <div class="ator ator-espiao">E<span>Espião</span></div>
+        </div>
+        <p id="aviso-envio" class="aviso"></p>
+        <p class="passo-texto">
+          Um espião interceptou a mensagem cifrada. Ele também tem a chave pública do Bob, porque ela é pública.
+          Será que ele consegue decifrar?
+        </p>
+        <label for="texto-cifrado">Mensagem cifrada (Base64)</label>
+        <textarea id="texto-cifrado"></textarea>
+        <button id="btn-espiao" class="btn-secundario">Espião tenta decifrar com a chave pública</button>
+        <p id="aviso-espiao" class="aviso"></p>
+      </div>
+
+      <!-- Passo 4 -->
+      <div class="passo" data-titulo="Bob decifra com a chave privada" data-requer-acao>
+        <div class="cena">
+          <div class="objeto">
+            <svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.8-1.2"/></svg>
+            <span>decifrar com a privada</span>
+          </div>
+          <div class="ator">B<span>Bob</span></div>
+        </div>
+        <p class="passo-texto">
+          Só o Bob tem a <strong>chave privada</strong>, a única capaz de decifrar o que foi cifrado com a chave pública dele.
+        </p>
+        <label for="chave-privada-bob">Chave privada do Bob</label>
+        <textarea id="chave-privada-bob" class="chave-pem"></textarea>
+        <button id="btn-chave-errada" class="btn-secundario">Simular chave privada errada</button>
+        <button id="btn-decifrar">Decifrar mensagem</button>
+        <p id="aviso-decifrar" class="aviso"></p>
+        <label for="mensagem-decifrada">Mensagem que Bob leu</label>
+        <textarea id="mensagem-decifrada" readonly></textarea>
+      </div>
+
+      <!-- Passo 5 -->
+      <div class="passo" data-titulo="Resumo">
+        <div class="resumo">
+          <div>
+            <label>Alice enviou</label>
+            <textarea id="resumo-original" readonly></textarea>
+          </div>
+          <div>
+            <label>Bob leu</label>
+            <textarea id="resumo-decifrada" readonly></textarea>
+          </div>
+        </div>
+        <p id="aviso-resumo" class="aviso"></p>
+        <ul class="dica">
+          <li>Alice cifrou com a <strong>chave pública</strong> e Bob decifrou com a <strong>chave privada</strong>: chaves diferentes, por isso é criptografia assimétrica.</li>
+          <li>Alice e Bob não precisaram combinar nenhum segredo antes. Isso resolve o problema da distribuição de chaves da criptografia simétrica.</li>
+          <li>O espião tinha a chave pública e mesmo assim não conseguiu decifrar.</li>
+          <li>Limitação: o RSA é lento e só cifra mensagens pequenas (190 bytes aqui). Na prática, usa-se a <strong>criptografia híbrida</strong>: o RSA cifra uma chave AES, e o AES cifra os dados. É assim que funciona o HTTPS.</li>
+        </ul>
+      </div>
+
+      <div class="wizard-rodape">
+        <div class="wizard-pontos"></div>
+        <div class="wizard-botoes">
+          <button class="wizard-voltar btn-secundario">&lsaquo; Voltar</button>
+          <button class="wizard-proximo">Próximo &rsaquo;</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/comum.js"></script>
+  <script src="js/assimetrica.js"></script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assinatura Digital</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main>
+    <a class="voltar-menu" href="index.html">&larr; Voltar ao menu</a>
+
+    <div class="wizard" id="wizard">
+      <div class="wizard-topo">
+        <span class="wizard-rotulo">Passo a passo</span>
+        <h1>Assinatura Digital com Certificado</h1>
+        <p class="wizard-contador"></p>
+      </div>
+
+      <!-- Passo 1 -->
+      <div class="passo" data-titulo="Alice gera o par de chaves" data-requer-acao>
+        <div class="cena">
+          <div class="ator">A<span>Alice</span></div>
+          <div class="objeto">
+            <svg viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3 21 2M16 7l3 3M18.5 4.5l2 2"/></svg>
+            <span>RSA-2048</span>
+          </div>
+        </div>
+        <p class="passo-texto">
+          Para assinar documentos, Alice precisa de um par de chaves RSA. Agora os papéis se invertem em relação à cifragem:
+          ela vai <strong>assinar com a chave privada</strong> (que só ela tem), e qualquer pessoa poderá
+          <strong>verificar com a chave pública</strong>.
+        </p>
+        <button id="btn-gerar-chaves">Gerar par de chaves da Alice</button>
+        <p id="aviso-chaves" class="aviso"></p>
+        <div class="resumo">
+          <div>
+            <label for="chave-publica">Chave pública</label>
+            <textarea id="chave-publica" class="chave-pem" readonly></textarea>
+          </div>
+          <div>
+            <label for="chave-privada">Chave privada (secreta)</label>
+            <textarea id="chave-privada" class="chave-pem" readonly></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Passo 2 -->
+      <div class="passo" data-titulo="A Autoridade Certificadora emite o certificado" data-requer-acao>
+        <div class="cena">
+          <div class="ator">A<span>Alice</span></div>
+          <div class="objeto">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><circle cx="12" cy="17" r="3"/><path d="m10.5 19.5-1 3 2.5-1 2.5 1-1-3M7 8h10M7 11h6"/></svg>
+            <span>&larr; certificado &larr;</span>
+          </div>
+          <div class="ator ator-ac">AC<span>Autoridade</span></div>
+        </div>
+        <p class="passo-texto">
+          Uma chave pública sozinha não diz <strong>de quem</strong> ela é. O <strong>certificado digital</strong> é um
+          documento que liga a chave pública à identidade da Alice, e é <strong>assinado por uma Autoridade Certificadora (AC)</strong>
+          em quem todos confiam, como acontece na ICP-Brasil.
+        </p>
+        <p class="dica" id="info-ac"></p>
+        <label for="titular-nome">Nome do titular</label>
+        <input type="text" id="titular-nome" value="Alice">
+        <label for="titular-email">E-mail</label>
+        <input type="text" id="titular-email" value="alice@ifsp.edu.br">
+        <label for="titular-organizacao">Organização</label>
+        <input type="text" id="titular-organizacao" value="IFSP">
+        <button id="btn-emitir">Solicitar certificado à AC</button>
+        <p id="aviso-certificado" class="aviso"></p>
+        <div id="area-certificado" hidden>
+          <table class="tabela-certificado" id="tabela-certificado"></table>
+          <details>
+            <summary>Ver o certificado no formato PEM</summary>
+            <textarea id="certificado-pem" class="chave-pem" readonly></textarea>
+          </details>
+          <button id="btn-baixar-certificado" class="btn-secundario">Baixar certificado (.crt)</button>
+        </div>
+      </div>
+
+      <!-- Passo 3 -->
+      <div class="passo" data-titulo="Alice assina um arquivo" data-requer-acao>
+        <div class="cena">
+          <div class="objeto">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>
+            <span>arquivo</span>
+          </div>
+          <div class="objeto"><span>&rarr; hash &rarr;</span></div>
+          <div class="objeto">
+            <svg viewBox="0 0 24 24"><path d="M3 21c3-1 5-4 7-7l4-4M14 10l3-3 3 3-3 3zM3 21l2-4"/></svg>
+            <span>assinatura</span>
+          </div>
+        </div>
+        <p class="passo-texto">
+          Assinar é feito em duas etapas: primeiro calcula-se o <strong>hash SHA-256</strong> do arquivo, e depois esse hash
+          é <strong>cifrado com a chave privada</strong> da Alice. O resultado é a assinatura digital.
+        </p>
+        <div class="abas">
+          <button id="assinar-aba-texto" class="aba">Mensagem</button>
+          <button id="assinar-aba-arquivo" class="aba">Arquivo</button>
+        </div>
+        <div id="assinar-area-texto">
+          <label for="assinar-texto">Mensagem</label>
+          <textarea id="assinar-texto" placeholder="Ex.: Eu, Alice, autorizo o pagamento de R$ 100,00"></textarea>
+        </div>
+        <div id="assinar-area-arquivo">
+          <label for="assinar-arquivo">Arquivo (até 20 MB)</label>
+          <input type="file" id="assinar-arquivo">
+        </div>
+        <button id="btn-assinar">Assinar com a chave privada</button>
+        <p id="aviso-assinar" class="aviso"></p>
+        <div id="area-assinatura" hidden>
+          <label>1. Hash SHA-256 do conteúdo</label>
+          <div id="hash-assinado" class="hash-saida"></div>
+          <label>2. Assinatura digital (Base64)</label>
+          <div id="assinatura-gerada" class="hash-saida"></div>
+          <button id="btn-baixar-assinatura" class="btn-secundario">Baixar assinatura (.sig)</button>
+        </div>
+      </div>
+
+      <!-- Passo 4 -->
+      <div class="passo" data-titulo="Bob verifica a assinatura" data-requer-acao>
+        <div class="cena">
+          <div class="objeto">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            <span>verificar</span>
+          </div>
+          <div class="ator">B<span>Bob</span></div>
+        </div>
+        <p class="passo-texto">
+          Bob recebeu o conteúdo, a assinatura e o certificado da Alice. Ele vai conferir três coisas.
+          Altere qualquer item para ver a verificação falhar.
+        </p>
+
+        <label class="opcao">
+          <input type="checkbox" id="usar-mesmos-dados" checked>
+          Usar exatamente o conteúdo que a Alice assinou
+        </label>
+        <div id="area-outros-dados" hidden>
+          <div class="abas">
+            <button id="verificar-aba-texto" class="aba">Mensagem</button>
+            <button id="verificar-aba-arquivo" class="aba">Arquivo</button>
+          </div>
+          <div id="verificar-area-texto">
+            <label for="verificar-texto">Mensagem recebida</label>
+            <textarea id="verificar-texto"></textarea>
+          </div>
+          <div id="verificar-area-arquivo">
+            <label for="verificar-arquivo">Arquivo recebido</label>
+            <input type="file" id="verificar-arquivo">
+          </div>
+        </div>
+
+        <label for="assinatura-recebida">Assinatura recebida (Base64)</label>
+        <textarea id="assinatura-recebida"></textarea>
+        <input type="file" id="arquivo-sig" accept=".sig,.txt">
+
+        <label for="certificado-recebido">Certificado da Alice (PEM)</label>
+        <textarea id="certificado-recebido" class="chave-pem"></textarea>
+        <input type="file" id="arquivo-crt" accept=".crt,.pem,.cer">
+        <button id="btn-certificado-falso" class="btn-secundario">Simular certificado falsificado por um impostor</button>
+
+        <button id="btn-verificar">Verificar assinatura</button>
+        <p id="aviso-verificar" class="aviso"></p>
+        <div id="area-verificacao" hidden>
+          <ul class="checklist" id="checklist"></ul>
+          <div id="resultado" class="resultado-grande"></div>
+        </div>
+      </div>
+
+      <!-- Passo 5 -->
+      <div class="passo" data-titulo="Resumo">
+        <p id="aviso-resumo" class="aviso"></p>
+        <ul class="dica">
+          <li>A assinatura garante <strong>integridade</strong> (o conteúdo não mudou), <strong>autenticidade</strong> (foi a Alice quem assinou) e <strong>não repúdio</strong> (Alice não pode negar, pois só ela tem a chave privada).</li>
+          <li>Assinar: hash do conteúdo + chave <strong>privada</strong> do autor. Verificar: chave <strong>pública</strong> que está no certificado.</li>
+          <li>O certificado liga a chave pública a uma pessoa, e a confiança vem da <strong>Autoridade Certificadora</strong> que o assinou.</li>
+          <li>Assinatura digital <strong>não é sigilo</strong>: o conteúdo continua legível. Para sigilo, combina-se com criptografia.</li>
+          <li>No Brasil, documentos assinados com certificado ICP-Brasil têm validade jurídica (MP 2.200-2/2001).</li>
+        </ul>
+        <button id="btn-baixar-ac" class="btn-secundario">Baixar certificado da AC Raiz (.crt)</button>
+      </div>
+
+      <div class="wizard-rodape">
+        <div class="wizard-pontos"></div>
+        <div class="wizard-botoes">
+          <button class="wizard-voltar btn-secundario">&lsaquo; Voltar</button>
+          <button class="wizard-proximo">Próximo &rsaquo;</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/comum.js"></script>
+  <script src="js/assinatura.js"></script>
+</body>
+</html>

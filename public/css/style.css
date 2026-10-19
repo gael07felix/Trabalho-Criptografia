@@ -1,0 +1,541 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background-color: #0f172a;
+  color: #e2e8f0;
+  min-height: 100vh;
+}
+
+header {
+  background-color: #1e293b;
+  padding: 24px;
+  text-align: center;
+  border-bottom: 3px solid #22c55e;
+}
+
+header h1 {
+  font-size: 1.8rem;
+  margin-bottom: 6px;
+}
+
+header p {
+  color: #94a3b8;
+}
+
+header a {
+  color: #22c55e;
+  text-decoration: none;
+}
+
+main {
+  max-width: 1000px;
+  margin: 32px auto;
+  padding: 0 16px;
+}
+
+/* Menu da página inicial */
+.menu {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 20px;
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.15s, border-color 0.15s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: #22c55e;
+}
+
+.card h2 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+  color: #22c55e;
+}
+
+.card p {
+  color: #94a3b8;
+  font-size: 0.95rem;
+}
+
+/* Seções e formulários das telas de criptografia */
+.secao {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.secao h2 {
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+  color: #22c55e;
+}
+
+label {
+  display: block;
+  margin: 12px 0 6px;
+  font-weight: 600;
+}
+
+textarea,
+input[type="text"],
+input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  background-color: #0f172a;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  font-family: Consolas, monospace;
+  font-size: 0.9rem;
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+button {
+  margin-top: 14px;
+  padding: 10px 20px;
+  background-color: #22c55e;
+  color: #0f172a;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #16a34a;
+}
+
+/* Fluxo em colunas (remetente -> rede -> destinatário) */
+.fluxo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.explicacao p {
+  line-height: 1.6;
+}
+
+.dica {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+ul.dica {
+  padding-left: 20px;
+  line-height: 1.8;
+}
+
+details {
+  margin-top: 12px;
+}
+
+summary {
+  cursor: pointer;
+  color: #22c55e;
+  margin-bottom: 8px;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-secundario {
+  background-color: transparent;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+}
+
+.btn-secundario:hover {
+  background-color: #334155;
+}
+
+.voltar-menu {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: #22c55e;
+  text-decoration: none;
+}
+
+/* Passo a passo */
+.wizard {
+  max-width: 720px;
+  margin: 0 auto;
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.wizard-topo {
+  text-align: center;
+  padding: 24px 24px 8px;
+}
+
+.wizard-rotulo {
+  color: #22c55e;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.wizard-topo h1 {
+  font-size: 1.6rem;
+  margin: 6px 0;
+}
+
+.wizard-contador {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.passo {
+  display: none;
+  padding: 8px 28px 20px;
+}
+
+.passo.ativo {
+  display: block;
+}
+
+.passo-cabecalho {
+  text-align: center;
+  margin: 12px 0;
+}
+
+.passo-numero {
+  display: inline-block;
+  background-color: #22c55e;
+  color: #0f172a;
+  font-weight: 700;
+  border-radius: 20px;
+  padding: 4px 12px;
+  margin-bottom: 8px;
+}
+
+.passo-cabecalho h2 {
+  font-size: 1.3rem;
+}
+
+.passo-texto {
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+/* Ilustração de cada passo */
+.cena {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  background-color: #0f172a;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.ator {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-color: #334155;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  position: relative;
+}
+
+.ator span {
+  position: absolute;
+  bottom: -24px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.objeto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #22c55e;
+  font-size: 0.8rem;
+  font-weight: 600;
+  gap: 4px;
+}
+
+.objeto svg {
+  width: 52px;
+  height: 52px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ator-espiao {
+  background-color: #7f1d1d;
+}
+
+.ator-ac {
+  background-color: #1e3a8a;
+  font-size: 1.3rem;
+}
+
+/* Certificado e verificação da assinatura */
+.tabela-certificado {
+  width: 100%;
+  margin-top: 16px;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.tabela-certificado td {
+  border: 1px solid #334155;
+  padding: 8px;
+  vertical-align: top;
+  white-space: pre-line;
+  word-break: break-all;
+}
+
+.tabela-certificado td:first-child {
+  width: 35%;
+  font-weight: 600;
+  color: #94a3b8;
+  word-break: normal;
+}
+
+label.opcao {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 400;
+}
+
+.checklist {
+  list-style: none;
+  margin-top: 16px;
+}
+
+.checklist li {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.checklist li.ok {
+  background-color: rgba(34, 197, 94, 0.12);
+  color: #86efac;
+}
+
+.checklist li.falha {
+  background-color: rgba(239, 68, 68, 0.12);
+  color: #fca5a5;
+}
+
+.checklist .marca {
+  font-weight: 700;
+}
+
+textarea.chave-pem {
+  min-height: 140px;
+  font-size: 0.7rem;
+}
+
+.resumo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* Abas de entrada (mensagem ou arquivo) */
+.abas {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.aba {
+  margin-top: 0;
+  background-color: transparent;
+  color: #94a3b8;
+  border: 1px solid #334155;
+}
+
+.aba:hover {
+  background-color: #334155;
+}
+
+.aba.ativa {
+  background-color: #22c55e;
+  color: #0f172a;
+  border-color: #22c55e;
+}
+
+/* Saída de hashes */
+.hash-saida {
+  background-color: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 10px;
+  font-family: Consolas, monospace;
+  font-size: 0.85rem;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.diferente {
+  background-color: rgba(239, 68, 68, 0.35);
+  color: #fecaca;
+}
+
+.resultado-grande {
+  margin-top: 16px;
+  padding: 18px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.resultado-grande.confere {
+  background-color: rgba(34, 197, 94, 0.15);
+  border: 2px solid #22c55e;
+  color: #22c55e;
+}
+
+.resultado-grande.nao-confere {
+  background-color: rgba(239, 68, 68, 0.15);
+  border: 2px solid #ef4444;
+  color: #ef4444;
+}
+
+.botao-link {
+  display: block;
+  margin-top: 16px;
+  padding: 12px;
+  text-align: center;
+  background-color: #22c55e;
+  color: #0f172a;
+  font-weight: 700;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.botao-link:hover {
+  background-color: #16a34a;
+}
+
+/* Rodapé com pontos e botões */
+.wizard-rodape {
+  border-top: 1px solid #334155;
+  padding: 16px 28px 24px;
+}
+
+.wizard-pontos {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.wizard-pontos span {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: #334155;
+  transition: width 0.2s;
+}
+
+.wizard-pontos span.ativo {
+  width: 24px;
+  background-color: #22c55e;
+}
+
+.wizard-botoes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* Avisos de sucesso, erro e informação */
+.aviso {
+  display: none;
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.aviso-sucesso,
+.aviso-erro,
+.aviso-info {
+  display: block;
+}
+
+.aviso-sucesso {
+  background-color: rgba(34, 197, 94, 0.15);
+  border: 1px solid #22c55e;
+  color: #22c55e;
+}
+
+.aviso-erro {
+  background-color: rgba(239, 68, 68, 0.15);
+  border: 1px solid #ef4444;
+  color: #ef4444;
+}
+
+.aviso-info {
+  background-color: rgba(59, 130, 246, 0.15);
+  border: 1px solid #3b82f6;
+  color: #60a5fa;
+}
+
+/* Mensagens de status e resultado */
+.status {
+  margin-top: 24px;
+  text-align: center;
+  color: #94a3b8;
+}
+
+.sucesso {
+  color: #22c55e;
+}
+
+.erro {
+  color: #ef4444;
+}
