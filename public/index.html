@@ -3,59 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Criptografia - Segurança da Informação</title>
+  <meta name="description" content="Experimentos de criptografia, hash e assinatura digital do IFSP.">
+  <title>Experimentos de Criptografia — IFSP</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-  <header>
-    <h1>Criptografia, Hash e Assinatura Digital</h1>
-    <p>Trabalho de Segurança da Informação - IFSP</p>
-  </header>
+<body class="home-page home-simple">
+  <div class="home-glow glow-one" aria-hidden="true"></div>
+  <div class="home-glow glow-two" aria-hidden="true"></div>
 
-  <main>
-    <div class="menu">
-      <a class="card" href="simetrica.html">
+  <main class="simple-main">
+    <header class="simple-heading">
+      <span class="simple-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M7 10V7a5 5 0 0 1 10 0v3M6 10h12v10H6zM12 14v3"/></svg>
+      </span>
+      <div>
+        <p>Segurança da Informação · IFSP</p>
+        <h1>Experimentos de Criptografia</h1>
+        <span>Escolha uma experiência para começar.</span>
+      </div>
+    </header>
+
+    <section class="experiment-grid" aria-label="Experimentos disponíveis">
+      <a class="experiment-card" href="simetrica.html">
+        <span class="card-number">01</span>
+        <span class="card-icon green" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 10h14v10H5zM8 10V7a4 4 0 0 1 8 0v3M12 14v2"/></svg></span>
+        <span class="card-tag">AES-256-GCM</span>
         <h2>Criptografia Simétrica</h2>
-        <p>AES-256: a mesma chave cifra e decifra a mensagem.</p>
+        <p>Uma única chave protege e recupera a informação com velocidade e segurança.</p>
+        <span class="card-link">Iniciar experiência <b>→</b></span>
       </a>
 
-      <a class="card" href="assimetrica.html">
+      <a class="experiment-card" href="assimetrica.html">
+        <span class="card-number">02</span>
+        <span class="card-icon blue" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm10 14a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM9 6h5a3 3 0 0 1 3 3v7M7 8v8a3 3 0 0 0 3 3h4"/></svg></span>
+        <span class="card-tag">RSA-2048</span>
         <h2>Criptografia Assimétrica</h2>
-        <p>RSA: cifra com a chave pública e decifra com a chave privada.</p>
+        <p>Descubra como chaves pública e privada tornam a comunicação segura.</p>
+        <span class="card-link">Iniciar experiência <b>→</b></span>
       </a>
 
-      <a class="card" href="hash-gerar.html">
+      <a class="experiment-card" href="hash-gerar.html">
+        <span class="card-number">03</span>
+        <span class="card-icon purple" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m10 3-2 18M16 3l-2 18M4 9h16M3 15h16"/></svg></span>
+        <span class="card-tag">SHA-256</span>
         <h2>Gerar Hash</h2>
-        <p>SHA-256: calcula o hash de uma mensagem ou arquivo.</p>
+        <p>Transforme qualquer mensagem ou arquivo em uma impressão digital única.</p>
+        <span class="card-link">Iniciar experiência <b>→</b></span>
       </a>
 
-      <a class="card" href="hash-verificar.html">
+      <a class="experiment-card" href="hash-verificar.html">
+        <span class="card-number">04</span>
+        <span class="card-icon orange" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M8 12l3 3 5-6"/></svg></span>
+        <span class="card-tag">INTEGRIDADE</span>
         <h2>Verificar Hash</h2>
-        <p>Confere se uma mensagem ou arquivo corresponde a um hash.</p>
+        <p>Compare impressões digitais e descubra se um conteúdo foi alterado.</p>
+        <span class="card-link">Iniciar experiência <b>→</b></span>
       </a>
 
-      <a class="card" href="assinatura.html">
-        <h2>Assinatura Digital</h2>
-        <p>Gera chaves e certificado, assina um arquivo e verifica a assinatura.</p>
+      <a class="experiment-card signature-card" href="assinatura.html">
+        <div>
+          <span class="card-icon cyan" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 18c4-1 5-6 9-10 2-2 5 1 3 3l-5 5c3-2 4 2 2 3 3-2 4 1 3 2M15 4l1-1 5 5-1 1"/></svg></span>
+          <span class="card-tag">CERTIFICADO X.509</span>
+          <h2>Assinatura Digital</h2>
+          <p>Assine arquivos e comprove autoria, autenticidade e integridade usando certificados digitais.</p>
+        </div>
+        <span class="document-visual" aria-hidden="true"><small>DOCUMENTO</small><i></i><i></i><i></i><b>✓</b></span>
+        <span class="card-link">Iniciar experiência <b>→</b></span>
       </a>
-    </div>
-
-    <p id="status-servidor" class="status">Verificando servidor...</p>
+    </section>
   </main>
-
-  <script>
-    fetch('/api/status')
-      .then((resposta) => resposta.json())
-      .then((dados) => {
-        const elemento = document.getElementById('status-servidor');
-        elemento.textContent = dados.mensagem;
-        elemento.classList.add('sucesso');
-      })
-      .catch(() => {
-        const elemento = document.getElementById('status-servidor');
-        elemento.textContent = 'Servidor indisponível';
-        elemento.classList.add('erro');
-      });
-  </script>
 </body>
 </html>
