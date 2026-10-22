@@ -108,6 +108,34 @@ function baixarArquivo(nome, conteudo) {
   URL.revokeObjectURL(url);
 }
 
+function celebrarConclusao(container, passo) {
+  if (!document.body.classList.contains('modal-embedded')) return;
+  if (passo.dataset.confeteExibido === 'true') return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  passo.dataset.confeteExibido = 'true';
+  const camada = document.createElement('div');
+  camada.className = 'confetes-conclusao';
+  camada.setAttribute('aria-hidden', 'true');
+  const cores = ['#22c55e', '#60a5fa', '#fbbf24', '#c084fc', '#f472b6', '#f8fafc'];
+
+  for (let indice = 0; indice < 72; indice++) {
+    const confete = document.createElement('i');
+    confete.style.setProperty('--x', `${Math.random() * 100}%`);
+    confete.style.setProperty('--desvio', `${(Math.random() - 0.5) * 180}px`);
+    confete.style.setProperty('--giro', `${360 + Math.random() * 720}deg`);
+    confete.style.setProperty('--atraso', `${Math.random() * 0.45}s`);
+    confete.style.setProperty('--duracao', `${1.9 + Math.random() * 1.4}s`);
+    confete.style.setProperty('--cor', cores[indice % cores.length]);
+    confete.style.setProperty('--largura', `${5 + Math.random() * 6}px`);
+    confete.style.setProperty('--altura', `${9 + Math.random() * 9}px`);
+    camada.appendChild(confete);
+  }
+
+  document.body.appendChild(camada);
+  window.setTimeout(() => camada.remove(), 3800);
+}
+
 /*
  * Passo a passo: cada elemento .passo dentro do container é uma etapa.
  * Passos com o atributo data-requer-acao só liberam o botão "Próximo"
@@ -134,33 +162,41 @@ function iniciarPassoAPasso(container, { aoMostrar } = {}) {
     pontos.appendChild(document.createElement('span'));
   });
 
-  function mostrar() {
-    passos.forEach((passo, indice) => passo.classList.toggle('ativo', indice === atual));
+  function mostrar(direcao = 'inicial') {
+    passos.forEach((passo) => passo.classList.remove('ativo'));
+    container.dataset.direcao = direcao;
+    void container.offsetWidth;
+    passos[atual].classList.add('ativo');
     [...pontos.children].forEach((ponto, indice) => ponto.classList.toggle('ativo', indice === atual));
     contador.textContent = `Passo ${atual + 1} de ${passos.length}`;
 
     btnVoltar.disabled = atual === 0;
     const ultimo = atual === passos.length - 1;
-    btnProximo.innerHTML = ultimo ? 'Recomeçar &#8634;' : 'Próximo &rsaquo;';
+    btnProximo.innerHTML = ultimo ? 'Fechar &times;' : 'Próximo &rsaquo;';
     btnProximo.disabled = !liberados[atual];
 
     if (aoMostrar) aoMostrar(atual);
+    if (ultimo) celebrarConclusao(container, passos[atual]);
   }
 
   btnVoltar.addEventListener('click', () => {
     if (atual > 0) {
       atual--;
-      mostrar();
+      mostrar('voltar');
     }
   });
 
   btnProximo.addEventListener('click', () => {
     if (atual === passos.length - 1) {
-      window.location.reload();
+      if (window.parent !== window) {
+        window.parent.postMessage({ type: 'close-application-modal' }, window.location.origin);
+      } else {
+        window.location.href = 'index.html#experimentos';
+      }
       return;
     }
     atual++;
-    mostrar();
+    mostrar('proximo');
   });
 
   mostrar();
