@@ -2,6 +2,34 @@
 
 const campo = (id) => document.getElementById(id);
 
+function prepararEntradaDaAplicacao() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const voltar = document.querySelector('.voltar-menu');
+  const wizard = document.querySelector('.wizard');
+  if (!voltar && !wizard) return;
+
+  if (voltar) {
+    voltar.dataset.pageReveal = 'left';
+    voltar.style.setProperty('--page-reveal-delay', '0ms');
+  }
+
+  if (wizard) {
+    wizard.dataset.pageReveal = 'up';
+    wizard.style.setProperty('--page-reveal-delay', '90ms');
+  }
+
+  document.body.classList.add('application-motion-ready');
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
+      voltar?.classList.add('is-page-visible');
+      wizard?.classList.add('is-page-visible');
+    });
+  });
+}
+
+prepararEntradaDaAplicacao();
+
 async function enviar(rota, dados) {
   const resposta = await fetch(rota, {
     method: 'POST',
@@ -167,6 +195,17 @@ function iniciarPassoAPasso(container, { aoMostrar } = {}) {
     container.dataset.direcao = direcao;
     void container.offsetWidth;
     passos[atual].classList.add('ativo');
+
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const elementosDoPasso = [...passos[atual].children];
+      elementosDoPasso.forEach((elemento, indice) => {
+        elemento.style.setProperty('--step-reveal-delay', `${Math.min(indice, 8) * 55}ms`);
+      });
+      passos[atual].classList.remove('elementos-entrando');
+      void passos[atual].offsetWidth;
+      passos[atual].classList.add('elementos-entrando');
+    }
+
     [...pontos.children].forEach((ponto, indice) => ponto.classList.toggle('ativo', indice === atual));
     contador.textContent = `Passo ${atual + 1} de ${passos.length}`;
 
